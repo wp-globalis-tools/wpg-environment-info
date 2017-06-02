@@ -1,0 +1,26 @@
+{
+    "name":"globalis/wpg-environment-info",
+    "type":"wordpress-muplugin",
+    "license":"GPL-2.0",
+    "description":"Add environment informations to your wp-admin bar",
+    "homepage":"https://github.com/wp-globalis-tools/wpg-environment-info",
+    "authors":[
+        {
+            "name":"Pierre Dargham",
+            "homepage":"https://github.com/pierre-dargham/"
+        },
+        {
+            "name":"GLOBALIS media systems",
+            "homepage":"https://www.globalis-ms.com/"
+        }
+   ],
+   "keywords":[
+        "wordpress"
+   ],
+   "support":{
+        "issues":"https://github.com/wp-globalis-tools/wpg-environment-info/issues"
+   },
+   "require":{
+        "php":">=5.5"
+   }
+}
