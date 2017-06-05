@@ -16,7 +16,8 @@ namespace Globalis\WP\EnvironmentInfo;
 
 add_action('admin_bar_menu', __NAMESPACE__ . '\\add_environment_info', 10);
 add_action('admin_bar_menu', __NAMESPACE__ . '\\remove_wp_logo', 99);
-add_action('after_setup_theme', __NAMESPACE__ . '\\override_admin_bar_style', 10, 1);
+add_action('admin_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
+add_action('wp_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
 
 function get_git_revision() {
 	$filename = ROOT_DIR . '/.gitrevision';
@@ -181,12 +182,10 @@ function get_public_urls() {
 	return $urls;
 }
 
-function override_admin_bar_style() {
-  add_theme_support('admin-bar', ['callback' => __NAMESPACE__ . '\\admin_bar_inline_css']);
-  add_action('admin_head', __NAMESPACE__ . '\\admin_bar_inline_css', 10, 1);
-}
-
 function admin_bar_inline_css() {
+	if(!is_user_logged_in() || !is_admin_bar_showing()) {
+		return;
+	}
   ?>
 	<style type="text/css" media="screen">
 		#wpadminbar #wp-admin-bar-website-env {
