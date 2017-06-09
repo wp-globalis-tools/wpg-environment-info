@@ -7,7 +7,7 @@
  * Author URI:          https://www.globalis-ms.com/
  * License:             GPL2
  *
- * Version:             0.2.2
+ * Version:             0.2.3
  * Requires at least:   4.0.0
  * Tested up to:        4.7.8
  */
@@ -18,36 +18,51 @@ add_action('admin_bar_menu', __NAMESPACE__ . '\\add_environment_info', 10);
 add_action('admin_bar_menu', __NAMESPACE__ . '\\remove_wp_logo', 99);
 add_action('admin_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
 add_action('wp_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
+add_filter('update_footer', '__return_empty_string', 99);
+add_filter('admin_footer_text', '__return_empty_string', 99);
 
-function get_git_revision() {
-	$filename = ROOT_DIR . '/.gitrevision';
-	$prefix = '#';
-	if('development' != WP_ENV) {
-		if(file_exists($filename)) {
-			$commit = file_get_contents($filename);
+function get_git_revision($prefix = '#') {
+	static $revision;
+	if(!isset($revision)) {
+
+		$filename = ROOT_DIR . '/.gitrevision';
+		if('development' != WP_ENV) {
+			if(file_exists($filename)) {
+				$commit = file_get_contents($filename);
+			} else {
+				$commit = 'unknown';
+			}
 		} else {
-			$commit = 'unknown';
+			$commit = exec('git rev-parse --short HEAD');
 		}
-	} else {
-		$commit = exec('git rev-parse --short HEAD');
+		$revision = $prefix . $commit;
+
 	}
-	return $prefix . $commit;
+	return $revision;
 }
 
 function get_git_branch() {
-	$filename = ROOT_DIR . '/.gitbranch';
-	if('development' != WP_ENV) {
-		if(file_exists($filename)) {
-			return file_get_contents($filename);
+	static $branch;
+	if(!isset($branch)) {
+
+		$filename = ROOT_DIR . '/.gitbranch';
+		if('development' != WP_ENV) {
+			if(file_exists($filename)) {
+				$branch = file_get_contents($filename);
+			} else {
+				$branch = 'unknown branch';
+			}
 		} else {
-			return 'unknown branch';
+			$branch = exec('git rev-parse --abbrev-ref HEAD');
 		}
-	} else {
-		return exec('git rev-parse --abbrev-ref HEAD');
+
 	}
+	return $branch;
 }
 
-function get_version($revision, $branch) {
+function get_version() {
+	$revision = get_git_revision();
+	$branch = get_git_branch();
 	if(false !== strpos($branch, 'release_')) {
 		$version = str_replace('release_', '', $branch);
 	} else {
@@ -71,7 +86,7 @@ function env_shortname($env) {
 }
 
 function box_title($title) {
-	return '<span class="wpg-box">' . $title . ' : </span>';
+	return '<span class="wpg-box">' . $title . '</span>';
 }
 
 function box_switch($title) {
@@ -83,14 +98,10 @@ function box_switch_to($env, $url) {
 }
 
 function add_environment_info($wp_admin_bar) {
-
-	$revision = get_git_revision();
-	$branch   = get_git_branch();
-
 	$wp_admin_bar->add_menu( array(
 		'parent' => false,
 		'id'     => 'website-env',
-		'title'  => '[' . get_version($revision, $branch) . '] ' . env_shortname(WP_ENV),
+		'title'  => '[' . get_version() . '] ' . env_shortname(WP_ENV),
 		'meta'   => ['class'  => 'wpg-environment wpg-environment-' . WP_ENV],
 		'href'   => admin_url('/'),
 		));
@@ -100,25 +111,31 @@ function add_environment_info($wp_admin_bar) {
 			'parent' => 'website-env',
 			'id'     => 'website-env-box-server',
 			'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
-			));
+		));
 
 		$wp_admin_bar->add_node(array(
 			'parent' => 'website-env',
 			'id'     => 'website-env-box-db',
 			'title'  => box_title('Database') . code(DB_NAME) . ' on ' . code(DB_HOST),
-			));
+		));
 
 		$wp_admin_bar->add_node(array(
 			'parent' => 'website-env',
 			'id'     => 'website-env-box-git',
-			'title'  => box_title('Git') . 'commit ' . code($revision) . ' on branch ' . code($branch),
-			));
+			'title'  => box_title('Git') . 'commit ' . code(get_git_revision()) . ' on branch ' . code(get_git_branch()),
+		));
+
+		$wp_admin_bar->add_node(array(
+			'parent' => 'website-env',
+			'id'     => 'website-env-box-wp',
+			'title'  => box_title('WordPress') . 'version ' . get_bloginfo('version', 'display'),
+		));
 
 		$wp_admin_bar->add_node(array(
 			'parent' => 'website-env',
 			'id'     => 'website-env-box-seo',
 			'title'  => box_title('SEO') . code(get_seo_info()),
-			));
+		));
 
 		$public_urls = get_public_urls();
 
@@ -127,20 +144,20 @@ function add_environment_info($wp_admin_bar) {
 				'parent' => 'website-env',
 				'id'     => 'website-env-box-hr',
 				'title'  => '&nbsp;',
-				));
+			));
 
 			$wp_admin_bar->add_node(array(
 				'parent' => 'website-env',
 				'id'     => 'website-env-box-switch',
 				'title'  => '<span class="wpg-box">Switch to environment</span>',
-				));
+			));
 
 			foreach($public_urls as $env => $url) {
 				$wp_admin_bar->add_node(array(
 					'parent' => 'website-env-box-switch',
 					'id'     => 'website-env-box-switch-env-' . strtolower($env),
 					'title'  => '<a href="' . $url . '"><span class="wpg-box">' . ucwords($env) . '</span></a>',
-					));
+				));
 			}
 		}
 	}
@@ -208,7 +225,7 @@ function admin_bar_inline_css() {
 			color: #00b9eb;
 		}
 		#wpadminbar #wp-admin-bar-website-env .wpg-box {
-			width: 85px;
+			width: 95px;
 			font-weight: bold;
 			color: #FFFFFF;
 			text-transform: uppercase;
