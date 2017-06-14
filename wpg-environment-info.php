@@ -7,7 +7,7 @@
  * Author URI:          https://www.globalis-ms.com/
  * License:             GPL2
  *
- * Version:             0.2.3
+ * Version:             0.2.4
  * Requires at least:   4.0.0
  * Tested up to:        4.7.8
  */
@@ -72,7 +72,6 @@ function get_version() {
 }
 
 function env_shortname($env) {
-	$env = 'pre-production';
 	$envs = [
 		'development' => 'dev.',
 		'staging' => 'staging',
