@@ -7,7 +7,7 @@
  * Author URI:          https://www.globalis-ms.com/
  * License:             GPL2
  *
- * Version:             0.2.4
+ * Version:             0.2.6
  * Requires at least:   4.0.0
  * Tested up to:        4.7.8
  */
