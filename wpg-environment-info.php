@@ -20,6 +20,7 @@ add_action('admin_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
 add_action('wp_head', __NAMESPACE__.'\\admin_bar_inline_css', 10, 1);
 add_filter('update_footer', '__return_empty_string', 99);
 add_filter('admin_footer_text', '__return_empty_string', 99);
+add_action('admin_init', __NAMESPACE__ . '\\remove_dashboard_widgets');
 
 function get_git_revision($prefix = '#') {
 	static $revision;
@@ -258,4 +259,12 @@ function admin_bar_inline_css() {
 		}
 	</style>
   <?php
+}
+
+function remove_dashboard_widgets() {
+  remove_meta_box('dashboard_incoming_links', 'dashboard', 'normal');
+  remove_meta_box('dashboard_plugins', 'dashboard', 'normal');
+  remove_meta_box('dashboard_primary', 'dashboard', 'normal');
+  remove_meta_box('dashboard_secondary', 'dashboard', 'normal');
+  remove_action('welcome_panel', 'wp_welcome_panel');
 }
