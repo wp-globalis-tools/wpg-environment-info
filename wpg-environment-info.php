@@ -7,7 +7,7 @@
  * Author URI:          https://www.globalis-ms.com/
  * License:             GPL2
  *
- * Version:             0.3.0
+ * Version:             0.3.1
  * Requires at least:   4.0.0
  * Tested up to:        4.8.1
  */
@@ -206,6 +206,9 @@ function admin_bar_inline_css() {
 	<style type="text/css" media="screen">
 		#wpadminbar #wp-admin-bar-website-env {
 			width: 160px;
+		}
+		#wpadminbar #wp-admin-bar-website-env > div > ul > li {
+			display: block;
 		}
 		#wpadminbar #wp-admin-bar-website-env code {
 			color: #00b9eb;
