@@ -36,7 +36,6 @@ function get_git_revision($prefix = '#')
             $commit = exec('git rev-parse --short HEAD');
         }
         $revision = $prefix . $commit;
-
     }
     return $revision;
 }
@@ -55,7 +54,6 @@ function get_git_branch()
         } else {
             $branch = exec('git rev-parse --abbrev-ref HEAD');
         }
-
     }
     return $branch;
 }
@@ -66,6 +64,8 @@ function get_version()
     $branch = get_git_branch();
     if (false !== strpos($branch, 'release_')) {
         $version = str_replace('release_', '', $branch);
+    } elseif (false !== strpos($branch, 'hotfix_')) {
+        $version = str_replace('hotfix_', '', $branch);
     } else {
         $version = $revision;
     }
@@ -215,62 +215,62 @@ function admin_bar_inline_css()
         return;
     }
     ?>
-	<style type="text/css" media="screen">
-		#wpadminbar #wp-admin-bar-website-env {
-			width: 160px;
-		}
-		#wpadminbar #wp-admin-bar-website-env > div > ul > li {
-			display: block;
-		}
-		#wpadminbar #wp-admin-bar-website-env code {
-			color: #00b9eb;
-			background-color: #22262a;
-			padding: 0 3px;
-			font-weight: bold;
-			font-family: sans-serif;
-		}
-		#wpadminbar #wp-admin-bar-website-env > a {
-			text-transform: uppercase;
-			font-weight: bold;
-		}
-		#wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch.menupop.hover > div > span,
-		#wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch li a > .wpg-box:hover,
-		#wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch li.hover a > .wpg-box {
-			color: #00b9eb;
-		}
-		#wpadminbar #wp-admin-bar-website-env .wpg-box {
-			width: 95px;
-			font-weight: bold;
-			color: #FFFFFF;
-			text-transform: uppercase;
-			display: inline-block;
-		}
-		#wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-hr {
-			border-bottom: 2px dotted grey;
-			height: 0;
-			padding-bottom: 10px;
-			margin-bottom: 5px;
-			margin-left: 10px;
-			margin: 0 10px 5px 10px;
-		}
-		#wpadminbar .wpg-environment {
-			background-color : #e49503;
-		}
-		#wpadminbar .wpg-environment.wpg-environment-development {
-			background-color : #037a03;
-		}
-		#wpadminbar .wpg-environment.wpg-environment-staging {
-			background-color : #e49503;
-		}
-		#wpadminbar .wpg-environment.wpg-environment-production {
-			background-color : #d43a19;
-		}
-		#wpadminbar #wp-admin-bar-website-env .wpg-switch-to-link a {
-			text-transform: uppercase;
-			font-weight: bold;
-			text-decoration: underline;
-			padding: 0;
-		}
-	</style>
+    <style type="text/css" media="screen">
+        #wpadminbar #wp-admin-bar-website-env {
+            width: 160px;
+        }
+        #wpadminbar #wp-admin-bar-website-env > div > ul > li {
+            display: block;
+        }
+        #wpadminbar #wp-admin-bar-website-env code {
+            color: #00b9eb;
+            background-color: #22262a;
+            padding: 0 3px;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+        #wpadminbar #wp-admin-bar-website-env > a {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        #wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch.menupop.hover > div > span,
+        #wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch li a > .wpg-box:hover,
+        #wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-switch li.hover a > .wpg-box {
+            color: #00b9eb;
+        }
+        #wpadminbar #wp-admin-bar-website-env .wpg-box {
+            width: 95px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        #wpadminbar #wp-admin-bar-website-env #wp-admin-bar-website-env-box-hr {
+            border-bottom: 2px dotted grey;
+            height: 0;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            margin-left: 10px;
+            margin: 0 10px 5px 10px;
+        }
+        #wpadminbar .wpg-environment {
+            background-color : #e49503;
+        }
+        #wpadminbar .wpg-environment.wpg-environment-development {
+            background-color : #037a03;
+        }
+        #wpadminbar .wpg-environment.wpg-environment-staging {
+            background-color : #e49503;
+        }
+        #wpadminbar .wpg-environment.wpg-environment-production {
+            background-color : #d43a19;
+        }
+        #wpadminbar #wp-admin-bar-website-env .wpg-switch-to-link a {
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: underline;
+            padding: 0;
+        }
+    </style>
     <?php
 }
