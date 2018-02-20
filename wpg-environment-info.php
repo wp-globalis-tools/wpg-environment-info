@@ -64,6 +64,8 @@ function get_version()
     $branch = get_git_branch();
     if (false !== strpos($branch, 'release_')) {
         $version = str_replace('release_', '', $branch);
+    } elseif (false !== strpos($branch, 'hotfix_')) {
+        $version = str_replace('hotfix_', '', $branch);
     } else {
         $version = $revision;
     }
