@@ -113,11 +113,13 @@ function add_environment_info($wp_admin_bar)
         ]);
 
     if (current_user_can('manage_options')) {
-        $wp_admin_bar->add_node([
-            'parent' => 'website-env',
-            'id'     => 'website-env-box-server',
-            'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
-        ]);
+        if(isset($_SERVER['SERVER_ADDR'])) {
+            $wp_admin_bar->add_node([
+                'parent' => 'website-env',
+                'id'     => 'website-env-box-server',
+                'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
+            ]);
+        }
 
         $wp_admin_bar->add_node([
             'parent' => 'website-env',
