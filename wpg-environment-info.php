@@ -66,6 +66,8 @@ function get_version()
         $version = str_replace('release_', '', $branch);
     } elseif (false !== strpos($branch, 'hotfix_')) {
         $version = str_replace('hotfix_', '', $branch);
+    } elseif (version_compare($branch, '0.0.1', '>=') >= 0)) {
+        $version = $branch;
     } else {
         $version = $revision;
     }
