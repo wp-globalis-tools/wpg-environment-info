@@ -66,6 +66,8 @@ function get_version()
         $version = str_replace('release_', '', $branch);
     } elseif (false !== strpos($branch, 'hotfix_')) {
         $version = str_replace('hotfix_', '', $branch);
+    } elseif (version_compare($branch, '0.0.1', '>=') >= 0)) {
+        $version = $branch;
     } else {
         $version = $revision;
     }
@@ -113,11 +115,13 @@ function add_environment_info($wp_admin_bar)
         ]);
 
     if (current_user_can('manage_options')) {
-        $wp_admin_bar->add_node([
-            'parent' => 'website-env',
-            'id'     => 'website-env-box-server',
-            'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
-        ]);
+        if(isset($_SERVER['SERVER_ADDR'])) {
+            $wp_admin_bar->add_node([
+                'parent' => 'website-env',
+                'id'     => 'website-env-box-server',
+                'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
+            ]);
+        }
 
         $wp_admin_bar->add_node([
             'parent' => 'website-env',
