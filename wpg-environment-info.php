@@ -116,10 +116,17 @@ function add_environment_info($wp_admin_bar)
 
     if (current_user_can('manage_options')) {
         if(isset($_SERVER['SERVER_ADDR'])) {
+            $server_ip   = $_SERVER['SERVER_ADDR'];
+            $server_name = gethostbyaddr($server_ip);
+            if($server_ip === $server_name) {
+                $server_title = code($server_ip);
+            } else {
+                $server_title = code($server_name) . ' (' . code($server_ip) . ')';
+            }
             $wp_admin_bar->add_node([
                 'parent' => 'website-env',
                 'id'     => 'website-env-box-server',
-                'title'  => box_title('Server') . code(gethostbyaddr($_SERVER['SERVER_ADDR'])) . ' (' . code($_SERVER['SERVER_ADDR']) . ')',
+                'title'  => box_title('Server') . $server_title,
             ]);
         }
 
