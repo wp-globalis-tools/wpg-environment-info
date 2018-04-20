@@ -150,6 +150,12 @@ function add_environment_info($wp_admin_bar)
 
         $wp_admin_bar->add_node([
             'parent' => 'website-env',
+            'id'     => 'website-env-box-php',
+            'title'  => box_title('PHP') . 'version ' . phpversion(),
+        ]);
+
+        $wp_admin_bar->add_node([
+            'parent' => 'website-env',
             'id'     => 'website-env-box-seo',
             'title'  => box_title('SEO') . code(get_seo_info()),
         ]);
